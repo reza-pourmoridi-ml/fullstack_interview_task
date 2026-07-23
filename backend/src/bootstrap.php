@@ -16,6 +16,7 @@ if (!file_exists($dbFile)) {
     $pdo = new PDO('sqlite:' . $dbFile);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
+$pdo->exec('PRAGMA foreign_keys = ON;');
 
 // Very naive cache stub (to be replaced/improved by candidate)
 function cache_get(string $key): ?string {
