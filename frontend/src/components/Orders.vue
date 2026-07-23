@@ -14,7 +14,7 @@ async function fetchOrders() {
   error.value = ''
   try {
     const q = new URLSearchParams({ user_id: String(userId.value), page: String(page.value), per_page: String(per.value) })
-    const res = await fetch(`http://127.0.0.1:8080/api/orders?${q.toString()}`)
+    const res = await fetch(`/api/orders?${q.toString()}`)
     const json = await res.json()
     data.value = json.data
     count.value = json.count

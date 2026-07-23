@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    working_dir: /app/backend
+    command: php -S 0.0.0.0:8080 -t public
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app/backend
+      - ./bench:/app/bench
+      - ./alg:/app/alg
+      - ./code_review:/app/code_review
+      - ./ADR:/app/ADR
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    working_dir: /app/frontend
+    command: sh -lc "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+    depends_on:
+      - backend
