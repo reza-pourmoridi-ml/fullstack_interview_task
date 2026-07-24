@@ -29,8 +29,11 @@ class OrderService
             ? $cursorCreatedAt . ':' . $cursorId
             : 'first';
 
+        $ordersVersion = $this->cache->getNamespaceVersion('orders');
+
         $cacheKey = sprintf(
-            'orders:user:%d:cursor:%s:pp:%d:s:%s:e:%s',
+            'orders:v%d:user:%d:cursor:%s:pp:%d:s:%s:e:%s',
+            $ordersVersion,
             $userId,
             $cursorKey,
             $perPage,
