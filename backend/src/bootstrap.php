@@ -1,34 +1,39 @@
 <?php
+
 declare(strict_types=1);
+
+namespace App;
+
+use PDO;
+use Exception;
 
 date_default_timezone_set('UTC');
 
 $dbFile = __DIR__ . '/../db/orders.sqlite';
 $initSql = __DIR__ . '/../db/migrations/001_init.sql';
 
-if (!file_exists($dbFile)) {
-    // Initialize DB
-    $pdo = new PDO('sqlite:' . $dbFile);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = file_get_contents($initSql);
-    $pdo->exec($sql);
-} else {
-    $pdo = new PDO('sqlite:' . $dbFile);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+if (!file_exists(dirname($dbFile))) {
+    mkdir(dirname($dbFile), 0777, true);
 }
-$pdo->exec('PRAGMA foreign_keys = ON;');
 
-// Very naive cache stub (to be replaced/improved by candidate)
-function cache_get(string $key): ?string {
-    $f = sys_get_temp_dir() . '/cache_' . md5($key) . '.txt';
-    if (file_exists($f) && (time() - filemtime($f) < 10)) {
-        return file_get_contents($f);
+try {
+    $pdo = new PDO('sqlite:' . $dbFile);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+    $pdo->exec('PRAGMA foreign_keys = ON;');
+
+    if (!file_exists($dbFile) || filesize($dbFile) === 0) {
+        if (file_exists($initSql)) {
+            $sql = file_get_contents($initSql);
+            $pdo->exec($sql);
+        }
     }
-    return null;
-}
-function cache_set(string $key, string $value): void {
-    $f = sys_get_temp_dir() . '/cache_' . md5($key) . '.txt';
-    file_put_contents($f, $value);
+} catch (Exception $e) {
+    error_log('Database connection error: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Internal Server Error']);
+    exit;
 }
 
-$GLOBALS['pdo'] = $pdo;
+return $pdo;
