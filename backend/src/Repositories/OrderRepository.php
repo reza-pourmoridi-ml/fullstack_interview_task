@@ -135,7 +135,7 @@ class OrderRepository
                 'created_at' => $row['created_at'],
                 'payment' => $row['payment_status'] ? [
                     'status' => $row['payment_status'],
-                    'amount' => isset($row['payment_amount']) ? (float) $row['payment_amount'] : null,
+                    'amount' => isset($row['payment_amount']) ? (int) $row['payment_amount'] : null,
                 ] : null,
                 'items_count' => (int) $row['items_count'],
             ];

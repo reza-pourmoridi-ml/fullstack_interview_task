@@ -29,3 +29,4 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
     );
 CREATE INDEX idx_payments_order_id ON payments(order_id);
+CREATE UNIQUE INDEX idx_payments_order_id_unique ON payments(order_id);

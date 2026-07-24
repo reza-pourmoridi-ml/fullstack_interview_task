@@ -17,7 +17,7 @@ $insPay   = $pdo->prepare("INSERT INTO payments (order_id, method, status) VALUE
 $startTs = strtotime('2025-01-01 00:00:00');
 for ($i=0; $i<$rows; $i++) {
     $uid = rand(1, $users);
-    $total = rand(10, 500) + (rand(0, 99)/100);
+    $total = random_int(10000, 500000);
     $ts = $startTs + rand(0, 60*60*24*60); // within ~60 days
     $dt = gmdate('Y-m-d H:i:s', $ts);
 
