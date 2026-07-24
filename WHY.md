@@ -31,4 +31,5 @@ This document captures the key architectural and implementation decisions for th
 - **Composable UI Structure:** Broke the orders page into smaller components for filters, summary, table, and pagination controls.
 
 ## 5. Algorithmic Decisions
-
+- **Rejected Pairwise Shortcut:** I explicitly avoided the common but incorrect shortcut of validating only consecutive time differences. A sequence such as `10:00`, `10:04`, `10:08` has adjacent gaps under 5 minutes, yet the total span is 8 minutes
+- **Streaming Trade-off:** The streaming version is more scalable for sequential ingestion because it keeps only recent timestamps per user and processes the input in one pass, but this comes at the cost of more stateful logic and stronger assumptions about event ordering.
