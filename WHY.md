@@ -7,7 +7,10 @@ This document captures the key architectural and implementation decisions for th
 - **Layered Backend Structure:** Split responsibilities into `Http/Controllers`, `Services`, `Repositories`, and `Support` so request handling, business logic, and data access stay isolated and testable.
 - **Thin Controller Approach:** Kept controllers focused on input/output concerns only, while moving orchestration into services and SQL-heavy logic into repositories.
 - **Centralized Bootstrap:** Consolidated shared setup such as PDO initialization and dependency wiring to keep entrypoints minimal and consistent.
-
+- **Cursor-Based Load More:** Matched frontend pagination with backend keyset pagination by passing `next_cursor` between requests.
+- **Incremental List Updates:** Appended newly fetched records during pagination instead of replacing existing state.
+- **Metadata-Driven UI State:** Derived load-more availability from API pagination metadata rather than static UI rules.
+- 
 ## 2. Database Optimization
 - **Financial Precision:** Changed `orders.total` from `REAL` to `INTEGER` (storing values in base units, e.g., cents). This eliminates floating-point rounding errors common in financial calculations.
 - **Indexing Strategy:**
@@ -23,6 +26,9 @@ This document captures the key architectural and implementation decisions for th
 - **Stable Cache Identity:** Designed cache keys around query-shaping inputs such as `user_id`, date filters, page size, and cursor to prevent collisions between different result sets.
 
 ## 4. Frontend State Management
+- **Centralized Orders Store:** Moved orders data, filters, loading state, and pagination into a dedicated store for predictable state transitions.
+- **Separated API Concerns:** Kept HTTP and orders request logic in a dedicated API layer to avoid coupling network code to components.
+- **Composable UI Structure:** Broke the orders page into smaller components for filters, summary, table, and pagination controls.
 
 ## 5. Algorithmic Decisions
 
