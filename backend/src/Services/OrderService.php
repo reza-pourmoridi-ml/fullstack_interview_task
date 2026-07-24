@@ -19,22 +19,41 @@ class OrderService
     public function getOrdersList(array $filters): array
     {
         $userId = $filters['user_id'];
-        $page = $filters['page'];
         $perPage = $filters['per_page'];
         $start = $filters['start'];
         $end = $filters['end'];
+        $cursorCreatedAt = $filters['cursor_created_at'];
+        $cursorId = $filters['cursor_id'];
+
+        $cursorKey = $cursorCreatedAt !== null && $cursorId !== null
+            ? $cursorCreatedAt . ':' . $cursorId
+            : 'first';
 
         $cacheKey = sprintf(
-            "orders:user:%d:p:%d:pp:%d:s:%s:e:%s",
+            'orders:user:%d:cursor:%s:pp:%d:s:%s:e:%s',
             $userId,
-            $page,
+            $cursorKey,
             $perPage,
             $start ?? 'null',
             $end ?? 'null'
         );
 
-        return $this->cache->remember($cacheKey, 10, function () use ($userId, $page, $perPage, $start, $end) {
-            return $this->repository->getPaginatedOrders($userId, $page, $perPage, $start, $end);
+        return $this->cache->remember($cacheKey, 10, function () use (
+            $userId,
+            $perPage,
+            $start,
+            $end,
+            $cursorCreatedAt,
+            $cursorId
+        ) {
+            return $this->repository->getPaginatedOrders(
+                $userId,
+                $perPage,
+                $start,
+                $end,
+                $cursorCreatedAt,
+                $cursorId
+            );
         });
     }
 }
