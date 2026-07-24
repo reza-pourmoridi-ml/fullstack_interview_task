@@ -23,6 +23,9 @@ class OrderController
         $end = !empty($_GET['end']) ? $_GET['end'] : null;
 
         $cursorCreatedAt = !empty($_GET['cursor_created_at']) ? $_GET['cursor_created_at'] : null;
+        $cursorId = (isset($_GET['cursor_id']) && $_GET['cursor_id'] !== '') ? (int)$_GET['cursor_id'] : null;
+
+        $cursorCreatedAt = !empty($_GET['cursor_created_at']) ? $_GET['cursor_created_at'] : null;
         $cursorId = isset($_GET['cursor_id']) && $_GET['cursor_id'] !== ''
             ? max(0, (int)$_GET['cursor_id'])
             : null;
@@ -41,8 +44,10 @@ class OrderController
         Response::json([
             'token_hint' => 'CAND-RZ4',
             'per_page' => $perPage,
-            'total' => $result['total'],
-            'has_more' => $result['has_more'],
+            'meta' => [
+                'total' => $result['total'],
+                'next_cursor' => $result['has_more'] ? $result['next_cursor'] : null,
+            ],
             'next_cursor' => $result['next_cursor'],
             'data' => $result['data'],
         ]);

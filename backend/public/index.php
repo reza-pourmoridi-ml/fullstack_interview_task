@@ -30,8 +30,3 @@ if ($path === '/api/orders' && $method === 'GET') {
     $orderController = new \App\Http\Controllers\OrderController($orderService);
     $orderController->index();
 }
-
-\App\Support\Response::json([
-    'error' => 'Not Found',
-    'path' => $path
-], 404);
