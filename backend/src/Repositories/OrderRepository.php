@@ -51,10 +51,10 @@ class OrderRepository
             SELECT
                 o.id,
                 o.user_id,
-                o.status,
                 o.created_at,
+                o.total,
+                p.method as payment_method,
                 p.status AS payment_status,
-                p.amount AS payment_amount,
                 (
                     SELECT COUNT(*)
                     FROM order_items oi
@@ -107,6 +107,8 @@ class OrderRepository
         if ($cursorCreatedAt !== null && $cursorId !== null) {
             $stmt->bindValue(':cursor_created_at', $cursorCreatedAt, PDO::PARAM_STR);
             $stmt->bindValue(':cursor_id', $cursorId, PDO::PARAM_INT);
+
+
         }
 
         foreach ($params as $key => $value) {
@@ -131,22 +133,23 @@ class OrderRepository
             return [
                 'id' => (int) $row['id'],
                 'user_id' => (int) $row['user_id'],
-                'status' => $row['status'],
+                'total' => (int) $row['total'],
                 'created_at' => $row['created_at'],
                 'payment' => $row['payment_status'] ? [
                     'status' => $row['payment_status'],
-                    'amount' => isset($row['payment_amount']) ? (int) $row['payment_amount'] : null,
+                    'method' => $row['payment_method'],
                 ] : null,
                 'items_count' => (int) $row['items_count'],
             ];
         }, $rows);
 
+
         $nextCursor = null;
         if ($hasMore && !empty($orders)) {
             $lastOrder = $orders[count($orders) - 1];
             $nextCursor = [
-                'created_at' => $lastOrder['created_at'],
-                'id' => $lastOrder['id'],
+                'cursor_created_at' => $lastOrder['created_at'], // کلید باید cursor_created_at باشد
+                'cursor_id' => $lastOrder['id'],                 // کلید باید cursor_id باشد
             ];
         }
 
