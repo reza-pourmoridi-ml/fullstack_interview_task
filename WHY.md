@@ -6,11 +6,10 @@ This document captures the key architectural and implementation decisions for th
 - **PSR-4 Autoloading:** Switched to Composer autoloading to remove manual `require` chains, reduce bootstrap fragility, and make the codebase easier to scale and refactor.
 - **Layered Backend Structure:** Split responsibilities into `Http/Controllers`, `Services`, `Repositories`, and `Support` so request handling, business logic, and data access stay isolated and testable.
 - **Thin Controller Approach:** Kept controllers focused on input/output concerns only, while moving orchestration into services and SQL-heavy logic into repositories.
-- **Centralized Bootstrap:** Consolidated shared setup such as PDO initialization and dependency wiring to keep entrypoints minimal and consistent.
 - **Cursor-Based Load More:** Matched frontend pagination with backend keyset pagination by passing `next_cursor` between requests.
 - **Incremental List Updates:** Appended newly fetched records during pagination instead of replacing existing state.
 - **Metadata-Driven UI State:** Derived load-more availability from API pagination metadata rather than static UI rules.
-- 
+
 ## 2. Database Optimization
 - **Financial Precision:** Changed `orders.total` from `REAL` to `INTEGER` (storing values in base units, e.g., cents). This eliminates floating-point rounding errors common in financial calculations.
 - **Indexing Strategy:**
