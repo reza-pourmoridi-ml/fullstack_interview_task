@@ -12,8 +12,6 @@ function findUsersWithThreePurchasesInFiveMinutes(array $orders): array {
         }
     }
 
-    var_dump($matchingUsers);
-    die();
     return $matchingUsers;
 }
 
