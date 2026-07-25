@@ -8,3 +8,8 @@ Deliver:
 - `gen.php` (data generator) and `bench_alg.php` (simple runtime compare)
 
 Document why checking **adjacent pairs** is insufficient for the ≥3 requirement.
+
+Delivered:
+- `sol_sort_sliding.php` => `find_users_burst_purchases.php`
+- `sol_streaming.php` => `find_users_burst_purchases_stream.php`
+- `bench_alg.php` => `benchmark.php`

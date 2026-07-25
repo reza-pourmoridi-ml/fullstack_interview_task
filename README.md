@@ -40,7 +40,7 @@ Fix UX/state:
 - Add **optimistic update** + **rollback** for order note editing.
 - Add **offline cache** for last successful response using Pinia + localStorage/IndexedDB.
 
-### Algorithm (3-in-5)
+### Algorithm (3-in-5)[sol_stream.php](../sol_stream.php)
 Implement two versions:
 - A correct `O(n log n)` approach (sort + sliding window).
 - A streaming/big‑data friendly approach (bucket by user, one‑pass sliding window).
